@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HMA's Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 300px;
+    }
+    input[type="text"], select {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus, select:focus {
+      border-color: #007bff;
+    }
+    button {
+      padding: 12px;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .message {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .error {
+      color: #d9534f;
+    }
+    .success {
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>HMA's Calculator</h1>
+
+  <form id="calcForm">
+    <input type="text" id="num1" placeholder="Number 1" autocomplete="off" />
+    <input type="text" id="num2" placeholder="Number 2" autocomplete="off" />
+    <select id="operation">
+      <option value="">Select operation</option>
+      <option value="add">Add (+)</option>
+      <option value="subtract">Subtract (-)</option>
+      <option value="multiply">Multiply (×)</option>
+      <option value="divide">Divide (÷)</option>
+    </select>
+    <button type="submit">Calculate</button>
+  </form>
+
+  <div id="message" class="message"></div>
+
+  <script>
+    const form = document.getElementById('calcForm');
+    const num1Input = document.getElementById('num1');
+    const num2Input = document.getElementById('num2');
+    const operationSelect = document.getElementById('operation');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      messageDiv.textContent = '';
+      messageDiv.className = 'message';
+
+      const num1Str = num1Input.value.trim();
+      const num2Str = num2Input.value.trim();
+      const operation = operationSelect.value;
+
+      if (!num1Str || !num2Str) {
+        messageDiv.textContent = 'Error: Please enter both numbers.';
+        messageDiv.classList.add('error');
+        return;
+      }
+
+      if (!operation) {
+        messageDiv.textContent = 'Error: Please select an operation.';
+        messageDiv.classList.add('error');
+        return;
+      }
+
+      const num1 = parseFloat(num1Str);
+      const num2 = parseFloat(num2Str);
+
+      if (isNaN(num1) || isNaN(num2)) {
+        messageDiv.textContent = 'Error: Please enter valid numbers.';
+        messageDiv.classList.add('error');
+        return;
+      }
+
+      let result;
+      switch (operation) {
+        case 'add':
+          result = num1 + num2;
+          break;
+        case 'subtract':
+          result = num1 - num2;
+          break;
+        case 'multiply':
+          result = num1 * num2;
+          break;
+        case 'divide':
+          if (num2 === 0) {
+            messageDiv.textContent = 'Error: Division by zero is not allowed.';
+            messageDiv.classList.add('error');
+            return;
+          }
+          result = num1 / num2;
+          break;
+        default:
+          messageDiv.textContent = 'Error: Invalid operation selected.';
+          messageDiv.classList.add('error');
+          return;
+      }
+
+      // Show special message if result is exactly 10
+      if (result === 10) {
+        messageDiv.textContent = 'Hello Superman, hehe hello';
+        messageDiv.classList.add('success');
+      } else {
+        // Format result nicely (no trailing decimals if integer)
+        if (Number.isInteger(result)) {
+          messageDiv.textContent = `Result: ${result}`;
+        } else {
+          messageDiv.textContent = `Result: ${result.toFixed(6)}`;
+        }
+        messageDiv.classList.add('success');
+      }
+    });
+  </script>
+
+</body>
+</html>
+
